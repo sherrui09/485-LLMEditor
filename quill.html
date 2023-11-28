@@ -1,0 +1,71 @@
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<div id="toolbar">
+    <style>
+        #myButton, #myButton1, #myButton2 {
+            margin-right: 10px;
+        }
+        #suggestionPopup {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            border: 1px solid #888;
+            width: 80%; /* Full width */
+            left: 10%;
+            top: 20%; /* 20% from the top */
+            z-index: 1; /* Sit on top */
+            padding: 20px;
+            background-color: #fefefe;
+        }
+    </style>
+
+    <button id="myButton">GPT Call 1</button>
+    <!-- Other toolbar items -->
+    <button class="ql-bold">Bold</button>
+    <button class="ql-italic">Italic</button>
+</div>
+
+<div id="editor"></div>
+
+<!-- The Modal -->
+<div id="suggestionPopup">
+  <span id="closePopup" style="cursor:pointer;">&times;</span>
+  <p id="suggestionText">This is where the suggestion will appear...</p>
+</div>
+
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: '#toolbar'
+        }
+    });
+
+    var suggestionPopup = document.getElementById('suggestionPopup');
+    var suggestionText = document.getElementById('suggestionText');
+    var closePopup = document.getElementById('closePopup');
+
+    document.querySelector('#myButton').addEventListener('click', function() {
+        let range = quill.getSelection(true);
+        // Instead of making an API call, let's use dummy text
+        let dummySuggestion = "This is a dummy suggestion from the model.";
+
+        // Display the suggestion in the popup
+        suggestionText.textContent = dummySuggestion;
+
+        // Show the popup
+        suggestionPopup.style.display = 'block';
+    });
+
+    // When the user clicks on (x), close the popup
+    closePopup.onclick = function() {
+        suggestionPopup.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the popup, close it
+    window.onclick = function(event) {
+        if (event.target == suggestionPopup) {
+            suggestionPopup.style.display = "none";
+        }
+    }
+</script>
