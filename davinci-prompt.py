@@ -27,7 +27,7 @@ def generate(prompt):
     str: The content of GPT-4's response.
     """
     try:
-        openai.api_key = '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'
+        openai.api_key = ''
         completion = client.chat.completions.create(
             model="text-davinci-003",  #model="gpt-4"
             messages=[
