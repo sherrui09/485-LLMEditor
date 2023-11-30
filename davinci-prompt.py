@@ -11,6 +11,11 @@ Original file is located at
 
 import openai
 
+client = OpenAI(
+    # defaults to os.environ.get("OPENAI_API_KEY")
+    api_key="",
+)
+
 def generate(prompt):
     """
     Initializes a chat with GPT-4 and sends a prompt to get a response.
@@ -22,9 +27,9 @@ def generate(prompt):
     str: The content of GPT-4's response.
     """
     try:
-        openai.api_key = ''
-        completion = openai.ChatCompletion.create(
-            model="gpt-4",  # or text-davinci-003
+        openai.api_key = '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'
+        completion = client.chat.completions.create(
+            model="text-davinci-003",  #model="gpt-4"
             messages=[
                 {
                     "role": "user",
