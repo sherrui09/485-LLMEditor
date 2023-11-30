@@ -25,3 +25,9 @@ The tool uses a Quill.js editor for text input and manipulation. Custom buttons 
 1. **Input Text**: Enter your text into the Quill.js editor.
 2. **Interact with Daemons**: Utilize the toolbar buttons to engage with the different AI Daemons for analysis, bias checking, and topic exploration.
 3. **Refine and Explore**: Engage with the modal popups to receive suggestions and insights. Refine your text or explore suggested topics to enhance your content.
+
+## Demo
+
+
+https://github.com/sherrui09/485-LLMEditor/assets/72282919/57915683-102b-4e3c-abb5-7abd61c06603
+
