@@ -138,12 +138,25 @@
     z-index: 1000;
   }
   
+  .topic-item {
+    cursor: pointer;
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+
+  .topic-item:hover {
+      background-color: #e7e7e7;
+  }
+
   
 </style>
 
 <div id="toolbar">
     <button id="analyzeButton" class="circle-button" data-tooltip="Analyze Text" style="background-color: #FD8A8A; border: none; border-radius: 50%; color: white; cursor: pointer; width: auto; height: auto;"></button>
     <button id="biasButton" class="circle-button" data-tooltip="Check Bias" style="background-color: #AFCBFF; border: none; border-radius: 50%; color: white; cursor: pointer; width: auto; height: auto;"></button>
+    <button id="explorationButton" class="circle-button" data-tooltip="Explore Topics" style="background-color: #FFD580; border: none; border-radius: 50%; color: white; cursor: pointer; width: auto; height: auto;"></button>
     <button class="ql-bold" data-tooltip="Bold" style="background-color: #4285F4; color: white; border: none; border-radius: 4px; cursor: pointer; width: auto; height: auto; padding: 8px 12px; font-size: 16px;">B</button>
     <button class="ql-italic" data-tooltip="Italic" style="background-color: #4285F4; color: white; border: none; border-radius: 4px; cursor: pointer; width: auto; height: auto; padding: 8px 12px; font-size: 16px;">I</button>
   </div>
@@ -181,7 +194,12 @@
     }
 
     document.querySelector('#analyzeButton').addEventListener('click', function() {
-        let text = quill.getText();
+        let text = quill.getText().trim();
+        if (text === '') {
+            // Show an alert if the text is empty
+            alert('Please write some text before analysis.');
+            return; // Exit the function early
+        }
         // Make the API call to perform the text analysis
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'https://api.openai.com/v1/engines/text-davinci-003/completions');
@@ -209,7 +227,12 @@
     });
     
     document.querySelector('#biasButton').addEventListener('click', function() {
-        let text = quill.getText();
+        let text = quill.getText().trim();
+        if (text === '') {
+            // Show an alert if the text is empty
+            alert('Please write some text before evaluating bias.');
+            return; // Exit the function early
+        }
         // Make the API call to check for biases and suggest counterarguments
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'https://api.openai.com/v1/engines/text-davinci-003/completions');
@@ -268,6 +291,74 @@
         };
     });
     
+
+    document.querySelector('#explorationButton').addEventListener('click', function() {
+      let text = quill.getText().trim();
+      if (text === '') {
+          // Show an alert if the text is empty
+          alert('Please write some text before exploring topics.');
+          return; // Exit the function early
+      }
+      // Make the API call to get exploration topics
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://api.openai.com/v1/engines/text-davinci-003/completions');
+
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('Authorization', 'Bearer ');
+
+      const data = {
+          prompt: `Given the following text, suggest a list of relevant topics for further exploration:\n\n"${text}"`,
+          max_tokens: 200
+      };
+
+      xhr.send(JSON.stringify(data));
+
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            const topics = response.choices[0].text.split('\n').filter(topic => topic.trim() !== ''); // Filter out empty lines
+            const numberOfTopics = Math.min(topics.length, 5); // Take only up to 5 topics
+            suggestionText.innerHTML = topics.slice(0, numberOfTopics).map((topic, index) => `<div id='topic-${index}' class='topic-item'>${topic}</div>`).join('');
+            togglePopupElements(false); // Hide tone adjustment inputs
+            suggestionPopup.style.display = 'block';
+
+            // Add click listeners to each available topic
+            for (let i = 0; i < numberOfTopics; i++) {
+                document.querySelector(`#topic-${i}`).addEventListener('click', function() {
+                    handleTopicSelection(text, topics[i]);
+                });
+            }
+        } else {
+            console.log(xhr.statusText);
+        }
+      };
+    });
+
+    function handleTopicSelection(text, topic) {
+      // Make the API call to elaborate on the selected topic
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://api.openai.com/v1/engines/text-davinci-003/completions');
+
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('Authorization', 'Bearer ');
+
+      const data = {
+          prompt: `Given this text: ${text}, continue it and write a few sentences about: ${topic}`,
+          max_tokens: 150
+      };
+
+      xhr.send(JSON.stringify(data));
+
+      xhr.onload = function() {
+          if (xhr.status === 200) {
+              const response = JSON.parse(xhr.responseText);
+              suggestionText.textContent = response.choices[0].text;
+              suggestionPopup.style.display = 'block';
+          } else {
+              console.log(xhr.statusText);
+          }
+      };
+    }
 
     // When the user clicks on (x), close the popup
     closePopup.onclick = function() {
