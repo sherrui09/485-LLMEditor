@@ -14,7 +14,7 @@ This project integrates AI-powered Daemons into a text editor to assist users wi
 
 ## How It Works
 
-The tool uses a Quill.js editor for text input and manipulation. Custom buttons trigger different Daemons:
+The tool uses a Quill.js editor for text input and manipulation. The user will first input an API key. Custom buttons trigger different Daemons:
 
 - **Analyze Daemon**: Triggered by the 'Analyze Text' button, this daemon analyzes the text's tone and writing level, providing a detailed breakdown and suggestions for improvement.
 - **Bias Check Daemon**: Activated by the 'Check Bias' button, this daemon scans the text for potential biases, marks biased sections, and explains why they might be considered biased, promoting fair and unbiased writing.
