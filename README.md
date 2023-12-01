@@ -1,4 +1,4 @@
-# Text Analysis and Exploration Tool with AI Daemons
+# Text Editor Tool with AI Daemons
 
 This project integrates AI-powered Daemons into a text editor to assist users with text analysis, bias checking, tone adjustments, and exploration of related topics. The tool uses OpenAI's GPT-3.5 to provide suggestions and insights in real-time.
 
