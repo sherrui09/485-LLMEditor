@@ -28,6 +28,4 @@ The tool uses a Quill.js editor for text input and manipulation. The user will f
 
 ## Demo
 
-
-https://github.com/sherrui09/485-LLMEditor/assets/72282919/57915683-102b-4e3c-abb5-7abd61c06603
-
+https://youtu.be/pC-8VU8kC6s
